@@ -1,16 +1,10 @@
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-
-dotenv.config();
+import express from 'express';
+import authRouter from './routes/auth.routes';
 
 const app = express();
 
-app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.send("HobbyStamp server running");
-});
+app.use('/auth', authRouter);
 
 export default app;

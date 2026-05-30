@@ -24,6 +24,9 @@
     "typeorm": "^1.0.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/express": "^5.0.6",
+    "ts-node-dev": "^2.0.0",
     "typescript": "^6.0.3"
   }
 }

@@ -1,7 +1,14 @@
-import app from "./app";
+import app from './app';
+import { AppDataSource } from './config/data-source';
 
-const PORT = process.env.PORT || 3000;
+AppDataSource.initialize()
+  .then(() => {
+    console.log('DB Connected');
 
-app.listen(PORT, () => {
-  console.log(`HobbyStamp server running on port ${PORT}`);
-});
+    app.listen(3000, () => {
+      console.log('Server Running');
+    });
+  })
+  .catch((error) => {
+    console.error(error);
+  });
