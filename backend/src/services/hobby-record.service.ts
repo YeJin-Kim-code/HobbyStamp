@@ -59,4 +59,94 @@ export class HobbyRecordService {
       updatedAt: hobbyRecord.updatedAt,
     };
   }
+
+  async getHobbyRecords(userId: number) {
+  const records = await this.hobbyRecordRepository.find({
+    where: {
+      user: { id: userId },
+    },
+    relations: {
+      user: true,
+      hobby: true,
+    },
+    order: {
+      createdAt: 'DESC',
+    },
+  });
+
+  return records.map((record) => ({
+    id: record.id,
+    title: record.title,
+    content: record.content,
+    activityDate: record.activityDate,
+    goalAchieved: record.goalAchieved,
+    hobby: {
+      id: record.hobby.id,
+      name: record.hobby.name,
+    },
+    createdAt: record.createdAt,
+    updatedAt: record.updatedAt,
+  }));
+}
+
+async getHobbyRecordsByHobby(userId: number, hobbyId: number) {
+  const records = await this.hobbyRecordRepository.find({
+    where: {
+      user: { id: userId },
+      hobby: { id: hobbyId },
+    },
+    relations: {
+      user: true,
+      hobby: true,
+    },
+    order: {
+      createdAt: 'DESC',
+    },
+  });
+
+  return records.map((record) => ({
+    id: record.id,
+    title: record.title,
+    content: record.content,
+    activityDate: record.activityDate,
+    goalAchieved: record.goalAchieved,
+    hobby: {
+      id: record.hobby.id,
+      name: record.hobby.name,
+    },
+    createdAt: record.createdAt,
+    updatedAt: record.updatedAt,
+  }));
+}
+
+async getHobbyRecordById(userId: number, recordId: number) {
+  const record = await this.hobbyRecordRepository.findOne({
+    where: {
+      id: recordId,
+      user: { id: userId },
+    },
+    relations: {
+      user: true,
+      hobby: true,
+    },
+  });
+
+  if (!record) {
+    throw new Error('기록을 찾을 수 없습니다.');
+  }
+
+  return {
+    id: record.id,
+    title: record.title,
+    content: record.content,
+    activityDate: record.activityDate,
+    goalAchieved: record.goalAchieved,
+    hobby: {
+      id: record.hobby.id,
+      name: record.hobby.name,
+    },
+    createdAt: record.createdAt,
+    updatedAt: record.updatedAt,
+  };
+}
 }
