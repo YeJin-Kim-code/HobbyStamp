@@ -9,7 +9,7 @@ import {
 @Entity("hobbies")
 export class Hobby {
   @PrimaryGeneratedColumn({ type: "bigint" })
-  id!: string;
+  id!: number;
 
   @Column({ type: "varchar", length: 50, unique: true })
   name!: string;
