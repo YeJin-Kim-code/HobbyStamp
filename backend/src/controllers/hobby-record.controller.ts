@@ -118,3 +118,52 @@ export const getHobbyRecordById = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const updateHobbyRecord = async (req: Request, res: Response) => {
+  try {
+    const recordId = Number(req.params.id);
+
+    const hobbyRecord = await hobbyRecordService.updateHobbyRecord(
+      recordId,
+      req.body
+    );
+
+    return res.status(200).json({
+      message: '기록 수정 성공',
+      data: hobbyRecord,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json({
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
+      message: '서버 오류가 발생했습니다.',
+    });
+  }
+};
+
+export const deleteHobbyRecord = async (req: Request, res: Response) => {
+  try {
+    const recordId = Number(req.params.id);
+
+    const deletedRecord = await hobbyRecordService.deleteHobbyRecord(recordId);
+
+    return res.status(200).json({
+      message: '기록 삭제 성공',
+      data: deletedRecord,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return res.status(400).json({
+        message: error.message,
+      });
+    }
+
+    return res.status(500).json({
+      message: '서버 오류가 발생했습니다.',
+    });
+  }
+};

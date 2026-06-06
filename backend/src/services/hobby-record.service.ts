@@ -3,6 +3,7 @@ import { HobbyRecord } from '../entities/hobby-record.entity';
 import { User } from '../entities/user.entity';
 import { Hobby } from '../entities/hobby.entity';
 import { CreateHobbyRecordDto } from '../dto/create-hobby-record.dto';
+import { UpdateHobbyRecordDto } from '../dto/update-hobby-record.dto';
 
 export class HobbyRecordService {
   private hobbyRecordRepository = AppDataSource.getRepository(HobbyRecord);
@@ -147,6 +148,61 @@ async getHobbyRecordById(userId: number, recordId: number) {
     },
     createdAt: record.createdAt,
     updatedAt: record.updatedAt,
+  };
+}
+async updateHobbyRecord(
+  recordId: number,
+  updateHobbyRecordDto: UpdateHobbyRecordDto
+) {
+  const record = await this.hobbyRecordRepository.findOne({
+    where: { id: recordId },
+    relations: {
+      user: true,
+      hobby: true,
+    },
+  });
+
+  if (!record) {
+    throw new Error('기록을 찾을 수 없습니다.');
+  }
+
+  record.title = updateHobbyRecordDto.title ?? record.title;
+  record.content = updateHobbyRecordDto.content ?? record.content;
+  record.activityDate =
+    updateHobbyRecordDto.activityDate ?? record.activityDate;
+  record.goalAchieved =
+    updateHobbyRecordDto.goalAchieved ?? record.goalAchieved;
+
+  await this.hobbyRecordRepository.save(record);
+
+  return {
+    id: record.id,
+    title: record.title,
+    content: record.content,
+    activityDate: record.activityDate,
+    goalAchieved: record.goalAchieved,
+    hobby: {
+      id: record.hobby.id,
+      name: record.hobby.name,
+    },
+    createdAt: record.createdAt,
+    updatedAt: record.updatedAt,
+  };
+}
+
+async deleteHobbyRecord(recordId: number) {
+  const record = await this.hobbyRecordRepository.findOne({
+    where: { id: recordId },
+  });
+
+  if (!record) {
+    throw new Error('기록을 찾을 수 없습니다.');
+  }
+
+  await this.hobbyRecordRepository.remove(record);
+
+  return {
+    id: record.id,
   };
 }
 }
