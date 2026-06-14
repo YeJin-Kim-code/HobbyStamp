@@ -1,11 +1,17 @@
-import { Request, Response } from 'express';
+import { Response } from 'express';
 import { HobbyRecordService } from '../services/hobby-record.service';
+import { AuthRequest } from '../middlewares/auth.middleware';
 
 const hobbyRecordService = new HobbyRecordService();
 
-export const createHobbyRecord = async (req: Request, res: Response) => {
+export const createHobbyRecord = async (req: AuthRequest, res: Response) => {
   try {
-    const hobbyRecord = await hobbyRecordService.createHobbyRecord(req.body);
+    const userId = req.user!.userId;
+
+    const hobbyRecord = await hobbyRecordService.createHobbyRecord({
+      ...req.body,
+      userId,
+    });
 
     return res.status(201).json({
       message: '기록 작성 성공',
@@ -24,15 +30,9 @@ export const createHobbyRecord = async (req: Request, res: Response) => {
   }
 };
 
-export const getHobbyRecords = async (req: Request, res: Response) => {
+export const getHobbyRecords = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = Number(req.query.userId);
-
-    if (!userId) {
-      return res.status(400).json({
-        message: 'userId가 필요합니다.',
-      });
-    }
+    const userId = req.user!.userId;
 
     const records = await hobbyRecordService.getHobbyRecords(userId);
 
@@ -53,16 +53,13 @@ export const getHobbyRecords = async (req: Request, res: Response) => {
   }
 };
 
-export const getHobbyRecordsByHobby = async (req: Request, res: Response) => {
+export const getHobbyRecordsByHobby = async (
+  req: AuthRequest,
+  res: Response
+) => {
   try {
-    const userId = Number(req.query.userId);
+    const userId = req.user!.userId;
     const hobbyId = Number(req.params.hobbyId);
-
-    if (!userId) {
-      return res.status(400).json({
-        message: 'userId가 필요합니다.',
-      });
-    }
 
     const records = await hobbyRecordService.getHobbyRecordsByHobby(
       userId,
@@ -86,16 +83,10 @@ export const getHobbyRecordsByHobby = async (req: Request, res: Response) => {
   }
 };
 
-export const getHobbyRecordById = async (req: Request, res: Response) => {
+export const getHobbyRecordById = async (req: AuthRequest, res: Response) => {
   try {
-    const userId = Number(req.query.userId);
+    const userId = req.user!.userId;
     const recordId = Number(req.params.id);
-
-    if (!userId) {
-      return res.status(400).json({
-        message: 'userId가 필요합니다.',
-      });
-    }
 
     const record = await hobbyRecordService.getHobbyRecordById(
       userId,
@@ -119,11 +110,13 @@ export const getHobbyRecordById = async (req: Request, res: Response) => {
   }
 };
 
-export const updateHobbyRecord = async (req: Request, res: Response) => {
+export const updateHobbyRecord = async (req: AuthRequest, res: Response) => {
   try {
+    const userId = req.user!.userId;
     const recordId = Number(req.params.id);
 
     const hobbyRecord = await hobbyRecordService.updateHobbyRecord(
+      userId,
       recordId,
       req.body
     );
@@ -145,11 +138,15 @@ export const updateHobbyRecord = async (req: Request, res: Response) => {
   }
 };
 
-export const deleteHobbyRecord = async (req: Request, res: Response) => {
+export const deleteHobbyRecord = async (req: AuthRequest, res: Response) => {
   try {
+    const userId = req.user!.userId;
     const recordId = Number(req.params.id);
 
-    const deletedRecord = await hobbyRecordService.deleteHobbyRecord(recordId);
+    const deletedRecord = await hobbyRecordService.deleteHobbyRecord(
+      userId,
+      recordId
+    );
 
     return res.status(200).json({
       message: '기록 삭제 성공',

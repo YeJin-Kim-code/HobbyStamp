@@ -7,19 +7,20 @@ import {
   updateHobbyRecord,
   deleteHobbyRecord,
 } from '../controllers/hobby-record.controller';
+import { authenticate } from '../middlewares/auth.middleware';
 
 const router = Router();
 
-router.post('/', createHobbyRecord);
+router.post('/', authenticate, createHobbyRecord);
 
-router.get('/', getHobbyRecords);
+router.get('/', authenticate, getHobbyRecords);
 
-router.get('/hobby/:hobbyId', getHobbyRecordsByHobby);
+router.get('/hobby/:hobbyId', authenticate, getHobbyRecordsByHobby);
 
-router.get('/:id', getHobbyRecordById);
+router.get('/:id', authenticate, getHobbyRecordById);
 
-router.patch('/:id', updateHobbyRecord);
+router.patch('/:id', authenticate, updateHobbyRecord);
 
-router.delete('/:id', deleteHobbyRecord);
+router.delete('/:id', authenticate, deleteHobbyRecord);
 
 export default router;
