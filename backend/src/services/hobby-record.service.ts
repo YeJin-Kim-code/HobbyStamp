@@ -151,11 +151,14 @@ async getHobbyRecordById(userId: number, recordId: number) {
   };
 }
 async updateHobbyRecord(
+  userId: number,
   recordId: number,
   updateHobbyRecordDto: UpdateHobbyRecordDto
 ) {
   const record = await this.hobbyRecordRepository.findOne({
-    where: { id: recordId },
+    where: {
+      id: recordId,
+    },
     relations: {
       user: true,
       hobby: true,
@@ -164,6 +167,10 @@ async updateHobbyRecord(
 
   if (!record) {
     throw new Error('기록을 찾을 수 없습니다.');
+  }
+
+  if (record.user.id !== userId) {
+    throw new Error('수정 권한이 없습니다.');
   }
 
   record.title = updateHobbyRecordDto.title ?? record.title;
@@ -190,13 +197,22 @@ async updateHobbyRecord(
   };
 }
 
-async deleteHobbyRecord(recordId: number) {
+async deleteHobbyRecord(userId: number, recordId: number) {
   const record = await this.hobbyRecordRepository.findOne({
-    where: { id: recordId },
+    where: {
+      id: recordId,
+    },
+    relations: {
+      user: true,
+    },
   });
 
   if (!record) {
     throw new Error('기록을 찾을 수 없습니다.');
+  }
+
+  if (record.user.id !== userId) {
+    throw new Error('삭제 권한이 없습니다.');
   }
 
   await this.hobbyRecordRepository.remove(record);
@@ -204,5 +220,4 @@ async deleteHobbyRecord(recordId: number) {
   return {
     id: record.id,
   };
-}
-}
+}}
