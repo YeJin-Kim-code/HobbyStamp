@@ -38,3 +38,56 @@ export const createPost = async (
 
     return await postRepository.save(post);
 };
+
+export const updatePost = async (
+    userId: number,
+    postId: number,
+    title:string,
+    content:string,
+    hobbyId: number
+) => {
+    const post = await postRepository.findOne({
+        where: {id: postId},
+        relations:{user: true, hobby:true},
+    });
+
+    if (!post){
+        throw new Error("POST_NOT_FOUND");
+    }
+
+    if(post.user.id !== userId){
+        throw new Error("FORBIDDEN");
+    }
+      const hobby = await hobbyRepository.findOne({
+    where: { id: hobbyId },
+    });
+
+    if (!hobby) {
+     throw new Error("HOBBY_NOT_FOUND");
+    }
+
+    post.title = title;
+    post.content = content;
+    post.hobby = hobby;
+
+    return await postRepository.save(post);
+}
+
+export const deletePost = async (
+    userId: number,
+    postId: number
+) => {
+    const post = await postRepository.findOne({
+        where: {id: postId},
+        relations: {user:true},
+    });
+      if (!post) {
+    throw new Error("POST_NOT_FOUND");
+  }
+
+  if (post.user.id !== userId) {
+    throw new Error("FORBIDDEN");
+  }
+
+  await postRepository.remove(post);
+}
