@@ -17,7 +17,7 @@ export const createPost = async (
         where: {id:userId},
     });
     if(!user){
-        throw new Error("존재하지 않는 회원입니다");
+        throw new Error("USER_NOT_FOUND");
     }
 
     const hobby = await hobbyRepository.findOne({
@@ -25,7 +25,7 @@ export const createPost = async (
     });
 
     if (!hobby) {
-    throw new Error("취미가 존재하지 않습니다");
+    throw new Error("HOBBY_NOT_FOUND");
     }
 
     const post = postRepository.create({
