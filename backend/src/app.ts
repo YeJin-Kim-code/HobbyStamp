@@ -4,6 +4,7 @@ import hobbyRoutes from "./routes/hobby.routes"
 import hobbyRecordRoutes from './routes/hobby-record.routes';
 import stampRoutes from "./routes/stamp.routes";
 import postRoutes from "./routes/post.route";
+import commentRoutes from "./routes/comment.routes";
 const app = express();
 
 app.use(express.json());
@@ -13,4 +14,6 @@ app.use('/api/hobbies', hobbyRoutes);
 app.use('/api/hobby-records', hobbyRecordRoutes);
 app.use("/stamps", stampRoutes);
 app.use("/posts", postRoutes);
+app.use(commentRoutes);
+
 export default app;

@@ -20,7 +20,7 @@ export class Post {
     @JoinColumn({ name : "user_id"})
     user!: User;
 
-    @ManyToOne(() => User, {nullable: false, onDelete: "CASCADE"})
+    @ManyToOne(() => Hobby, {nullable: false, onDelete: "CASCADE"})
     @JoinColumn({ name: "hobby_id" })
     hobby!: Hobby;  
 
