@@ -14,5 +14,6 @@ app.use('/api/hobbies', hobbyRoutes);
 app.use('/api/hobby-records', hobbyRecordRoutes);
 app.use("/stamps", stampRoutes);
 app.use("/posts", postRoutes);
-app.use("/comments", commentRoutes);
+app.use(commentRoutes);
+
 export default app;
