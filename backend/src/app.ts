@@ -6,6 +6,7 @@ import stampRoutes from "./routes/stamp.routes";
 import postRoutes from "./routes/post.route";
 import commentRoutes from "./routes/comment.routes";
 import dashboardRoutes from "./routes/dashboard.routes";
+import mypageRoutes from "./routes/mypage.routes";
 const app = express();
 
 app.use(express.json());
@@ -18,4 +19,5 @@ app.use("/posts", postRoutes);
 
 app.use(commentRoutes);
 app.use("/dashboard", dashboardRoutes);
+app.use("/mypage", mypageRoutes);
 export default app;
