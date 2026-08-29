@@ -134,11 +134,28 @@ ${recordText}
     temperature: 0.2,
   });
 
-  const result = completion.choices[0]?.message?.content;
+const result = completion.choices[0]?.message?.content;
 
-  if (!result) {
-    throw new Error("AI_ANALYSIS_FAILED");
-  }
+if (!result) {
+  throw new Error("AI_ANALYSIS_FAILED");
+}
 
-  return result;
+const typeMatch = result.match(/TYPE:\s*(.+)/);
+const descriptionMatch = result.match(/DESCRIPTION:\s*([\s\S]+)/);
+
+if (!typeMatch || !descriptionMatch) {
+  throw new Error("AI_RESPONSE_FORMAT_INVALID");
+}
+
+const type = typeMatch[1]?.trim();
+const description = descriptionMatch[1]?.trim();
+
+if (!type || !description) {
+  throw new Error("AI_RESPONSE_FORMAT_INVALID");
+}
+
+return {
+  type,
+  description,
+};
 };

@@ -46,14 +46,12 @@ export const analyzeHobbyType = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.userId;
 
-    const result = await aiService.analyzeHobbyType(userId);
+const result = await aiService.analyzeHobbyType(userId);
 
-    return res.status(200).json({
-      message: "AI 취미 유형 분석 성공",
-      data: {
-        result,
-      },
-    });
+return res.status(200).json({
+  message: "AI 취미 유형 분석 성공",
+  data: result,
+});
   } catch (error) {
     console.error(error);
 
