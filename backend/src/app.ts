@@ -7,6 +7,7 @@ import postRoutes from "./routes/post.route";
 import commentRoutes from "./routes/comment.routes";
 import dashboardRoutes from "./routes/dashboard.routes";
 import mypageRoutes from "./routes/mypage.routes";
+import aiRouter from "./routes/ai.router";
 const app = express();
 
 app.use(express.json());
@@ -20,4 +21,5 @@ app.use("/posts", postRoutes);
 app.use(commentRoutes);
 app.use("/dashboard", dashboardRoutes);
 app.use("/mypage", mypageRoutes);
+app.use("/ai", aiRouter);
 export default app;

@@ -70,6 +70,8 @@ export const updatePost = async (
     post.content = content;
     post.hobby = hobby;
 
+    post.aiSummary = null;
+    
     return await postRepository.save(post);
 }
 
