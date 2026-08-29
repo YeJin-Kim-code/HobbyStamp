@@ -10,5 +10,9 @@ router.post(
   authenticate,
   aiController.summarizePost
 );
-
+router.post(
+  "/me/hobby-analysis",
+  authenticate,
+  aiController.analyzeHobbyType
+);
 export default router;
