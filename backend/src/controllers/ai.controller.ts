@@ -41,3 +41,38 @@ export const summarizePost = async (req: Request, res: Response) => {
     });
   }
 };
+
+export const analyzeHobbyType = async (req: Request, res: Response) => {
+  try {
+    const userId = (req as any).user.userId;
+
+    const result = await aiService.analyzeHobbyType(userId);
+
+    return res.status(200).json({
+      message: "AI 취미 유형 분석 성공",
+      data: {
+        result,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+
+    if (error instanceof Error) {
+      if (error.message === "HOBBY_RECORD_NOT_FOUND") {
+        return res.status(404).json({
+          message: "분석할 취미 기록이 없습니다.",
+        });
+      }
+
+      if (error.message === "AI_ANALYSIS_FAILED") {
+        return res.status(500).json({
+          message: "AI 취미 분석에 실패했습니다.",
+        });
+      }
+    }
+
+    return res.status(500).json({
+      message: "AI 취미 분석 중 오류가 발생했습니다.",
+    });
+  }
+};
