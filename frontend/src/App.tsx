@@ -4,6 +4,7 @@ import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
 import DashboardPage from "./pages/DashboardPage";
+import HobbyPage from "./pages/HobbyPage";
 
 function App() {
   return (
@@ -15,6 +16,11 @@ function App() {
       <Route
         path="/dashboard"
         element={<DashboardPage />}
+      />
+
+      <Route
+        path="/hobbies"
+        element={<HobbyPage />}
       />
     </Routes>
   );
