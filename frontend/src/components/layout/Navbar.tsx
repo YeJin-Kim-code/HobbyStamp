@@ -77,6 +77,18 @@ function Navbar() {
           >
             스탬프
           </NavLink>
+
+          {/* Day 23 - 게시글 페이지 */}
+          <NavLink
+            to="/posts"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-orange-500"
+                : "text-gray-600 hover:text-orange-500"
+            }
+          >
+            커뮤니티
+          </NavLink>
         </div>
       </nav>
     </header>
