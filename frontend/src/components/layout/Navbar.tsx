@@ -4,7 +4,10 @@ function Navbar() {
   return (
     <header className="border-b border-gray-200 bg-white">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <NavLink to="/" className="text-xl font-bold text-orange-500">
+        <NavLink
+          to="/"
+          className="text-xl font-bold text-orange-500"
+        >
           HobbyStamp
         </NavLink>
 
@@ -18,6 +21,39 @@ function Navbar() {
             }
           >
             홈
+          </NavLink>
+
+          <NavLink
+            to="/dashboard"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-orange-500"
+                : "text-gray-600 hover:text-orange-500"
+            }
+          >
+            대시보드
+          </NavLink>
+
+          <NavLink
+            to="/hobbies"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-orange-500"
+                : "text-gray-600 hover:text-orange-500"
+            }
+          >
+            취미
+          </NavLink>
+
+          <NavLink
+            to="/records"
+            className={({ isActive }) =>
+              isActive
+                ? "font-semibold text-orange-500"
+                : "text-gray-600 hover:text-orange-500"
+            }
+          >
+            기록
           </NavLink>
 
           <NavLink
