@@ -6,13 +6,25 @@ import SignupPage from "./pages/SignupPage";
 import DashboardPage from "./pages/DashboardPage";
 import HobbyPage from "./pages/HobbyPage";
 import RecordPage from "./pages/RecordPage";
+import StampPage from "./pages/StampPage";
 
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomePage />} />
-      <Route path="/login" element={<LoginPage />} />
-      <Route path="/signup" element={<SignupPage />} />
+      <Route
+        path="/"
+        element={<HomePage />}
+      />
+
+      <Route
+        path="/login"
+        element={<LoginPage />}
+      />
+
+      <Route
+        path="/signup"
+        element={<SignupPage />}
+      />
 
       <Route
         path="/dashboard"
@@ -27,6 +39,11 @@ function App() {
       <Route
         path="/records"
         element={<RecordPage />}
+      />
+
+      <Route
+        path="/stamps"
+        element={<StampPage />}
       />
     </Routes>
   );

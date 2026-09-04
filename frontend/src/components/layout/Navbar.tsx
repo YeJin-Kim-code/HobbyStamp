@@ -66,6 +66,17 @@ function Navbar() {
           >
             로그인
           </NavLink>
+
+          <NavLink
+          to="/stamps"
+          className={({ isActive }) =>
+            isActive
+              ? "font-semibold text-orange-500"
+              : "text-gray-600 hover:text-orange-500"
+            }       
+          >
+            스탬프
+          </NavLink>
         </div>
       </nav>
     </header>
