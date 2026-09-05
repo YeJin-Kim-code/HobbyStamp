@@ -1,9 +1,14 @@
 import { NavLink } from "react-router-dom";
 
 function Navbar() {
+  const linkClass = ({ isActive }: { isActive: boolean }) =>
+    isActive
+      ? "font-bold text-orange-500"
+      : "text-gray-600 transition hover:text-orange-500";
+
   return (
     <header className="border-b border-gray-200 bg-white">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         <NavLink
           to="/"
           className="text-xl font-bold text-orange-500"
@@ -11,86 +16,57 @@ function Navbar() {
           HobbyStamp
         </NavLink>
 
-        <div className="flex items-center gap-6">
-          <NavLink
-            to="/"
-            className={({ isActive }) =>
-              isActive
-                ? "font-semibold text-orange-500"
-                : "text-gray-600 hover:text-orange-500"
-            }
-          >
-            홈
-          </NavLink>
-
+        <nav className="flex flex-wrap items-center gap-5 text-sm">
           <NavLink
             to="/dashboard"
-            className={({ isActive }) =>
-              isActive
-                ? "font-semibold text-orange-500"
-                : "text-gray-600 hover:text-orange-500"
-            }
+            className={linkClass}
           >
             대시보드
           </NavLink>
 
           <NavLink
             to="/hobbies"
-            className={({ isActive }) =>
-              isActive
-                ? "font-semibold text-orange-500"
-                : "text-gray-600 hover:text-orange-500"
-            }
+            className={linkClass}
           >
             취미
           </NavLink>
 
           <NavLink
             to="/records"
-            className={({ isActive }) =>
-              isActive
-                ? "font-semibold text-orange-500"
-                : "text-gray-600 hover:text-orange-500"
-            }
+            className={linkClass}
           >
             기록
           </NavLink>
 
           <NavLink
-            to="/login"
-            className={({ isActive }) =>
-              isActive
-                ? "font-semibold text-orange-500"
-                : "text-gray-600 hover:text-orange-500"
-            }
-          >
-            로그인
-          </NavLink>
-
-          <NavLink
-          to="/stamps"
-          className={({ isActive }) =>
-            isActive
-              ? "font-semibold text-orange-500"
-              : "text-gray-600 hover:text-orange-500"
-            }       
+            to="/stamps"
+            className={linkClass}
           >
             스탬프
           </NavLink>
 
-          {/* Day 23 - 게시글 페이지 */}
           <NavLink
             to="/posts"
-            className={({ isActive }) =>
-              isActive
-                ? "font-semibold text-orange-500"
-                : "text-gray-600 hover:text-orange-500"
-            }
+            className={linkClass}
           >
             커뮤니티
           </NavLink>
-        </div>
-      </nav>
+
+          <NavLink
+            to="/ai"
+            className={linkClass}
+          >
+            AI 분석
+          </NavLink>
+
+          <NavLink
+            to="/mypage"
+            className={linkClass}
+          >
+            마이페이지
+          </NavLink>
+        </nav>
+      </div>
     </header>
   );
 }
