@@ -9,6 +9,8 @@ import RecordPage from "./pages/RecordPage";
 import StampPage from "./pages/StampPage";
 import PostPage from "./pages/PostPage";
 import CommentPage from "./pages/CommentPage";
+import AiPage from "./pages/AiPage";
+import MyPage from "./pages/MyPage";
 function App() {
   return (
     <Routes>
@@ -43,6 +45,15 @@ function App() {
       <Route
         path="/posts/:postId/comments"
         element={<CommentPage />}
+      />
+      <Route
+        path="/ai"
+        element={<AiPage />}
+      />
+
+      <Route
+        path="/mypage"
+        element={<MyPage />}
       />
     </Routes>
   );
