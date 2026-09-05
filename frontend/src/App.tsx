@@ -8,7 +8,7 @@ import HobbyPage from "./pages/HobbyPage";
 import RecordPage from "./pages/RecordPage";
 import StampPage from "./pages/StampPage";
 import PostPage from "./pages/PostPage";
-
+import CommentPage from "./pages/CommentPage";
 function App() {
   return (
     <Routes>
@@ -39,6 +39,10 @@ function App() {
       <Route
         path="/posts"
         element={<PostPage />}
+      />
+      <Route
+        path="/posts/:postId/comments"
+        element={<CommentPage />}
       />
     </Routes>
   );
