@@ -1,4 +1,7 @@
 import express from "express";
+import cors from "cors";
+
+
 import authRouter from "./routes/auth.routes";
 import hobbyRoutes from "./routes/hobby.routes";
 import hobbyRecordRoutes from "./routes/hobby-record.routes";
@@ -9,8 +12,14 @@ import dashboardRoutes from "./routes/dashboard.routes";
 import mypageRoutes from "./routes/mypage.routes";
 import aiRouter from "./routes/ai.router";
 const app = express();
-
+app.use(
+  cors({
+    origin: "http://localhost:5173",
+    credentials: true,
+  })
+);
 app.use(express.json());
+
 
 app.use("/auth", authRouter);
 app.use("/api/hobbies", hobbyRoutes);
