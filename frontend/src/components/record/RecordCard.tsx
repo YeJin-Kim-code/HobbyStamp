@@ -2,17 +2,29 @@ type RecordCardProps = {
   hobby: string;
   title: string;
   content: string;
-  duration: number;
-  date: string;
+  activityDate: string;
+  goalAchieved: boolean;
 };
 
 function RecordCard({
   hobby,
   title,
   content,
-  duration,
-  date,
+  activityDate,
+  goalAchieved,
 }: RecordCardProps) {
+  /*
+   * YYYY-MM-DD
+   *
+   * →
+   *
+   * 2026. 09. 12.
+   */
+  const formattedDate =
+    new Date(
+      `${activityDate}T00:00:00`,
+    ).toLocaleDateString("ko-KR");
+
   return (
     <article className="rounded-2xl border border-orange-100 bg-white p-5 shadow-sm transition hover:-translate-y-1 hover:shadow-md">
       <div className="mb-3 flex items-center justify-between gap-4">
@@ -21,7 +33,7 @@ function RecordCard({
         </span>
 
         <span className="text-sm text-gray-400">
-          {date}
+          {formattedDate}
         </span>
       </div>
 
@@ -34,9 +46,15 @@ function RecordCard({
       </p>
 
       <div className="mt-4 border-t border-gray-100 pt-4">
-        <span className="text-sm font-medium text-gray-500">
-          ⏱ {duration}분 활동
-        </span>
+        {goalAchieved ? (
+          <span className="text-sm font-semibold text-green-600">
+            🎯 목표 달성
+          </span>
+        ) : (
+          <span className="text-sm font-medium text-gray-400">
+            🌱 취미 기록 완료
+          </span>
+        )}
       </div>
     </article>
   );
