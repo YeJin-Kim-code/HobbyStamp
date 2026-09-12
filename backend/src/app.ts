@@ -24,7 +24,7 @@ app.use(express.json());
 app.use("/auth", authRouter);
 app.use("/api/hobbies", hobbyRoutes);
 app.use("/api/hobby-records", hobbyRecordRoutes);
-app.use("/stamps", stampRoutes);
+app.use("/api/stamps", stampRoutes);
 app.use("/posts", postRoutes);
 
 app.use(commentRoutes);
