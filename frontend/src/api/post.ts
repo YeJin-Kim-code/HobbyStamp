@@ -1,19 +1,27 @@
 import api from "./client";
 
 // ========================================
-// 관련 타입
+// 게시글 작성자
 // ========================================
 
 export interface PostUser {
   id: number;
-  name?: string;
-  email?: string;
+  email: string;
+  nickname: string;
 }
+
+// ========================================
+// 취미
+// ========================================
 
 export interface PostHobby {
   id: number;
   name: string;
 }
+
+// ========================================
+// 게시글
+// ========================================
 
 export interface Post {
   id: number;
@@ -33,7 +41,7 @@ export interface Post {
 }
 
 // ========================================
-// 공통 API 응답
+// API 응답
 // ========================================
 
 interface PostListResponse {
@@ -47,7 +55,7 @@ interface PostResponse {
 }
 
 // ========================================
-// 게시글 생성 Request
+// 게시글 작성 / 수정 요청 데이터
 // ========================================
 
 export interface CreatePostRequest {
@@ -57,7 +65,7 @@ export interface CreatePostRequest {
 }
 
 // ========================================
-// 게시글 목록
+// 게시글 목록 조회
 // GET /posts
 // ========================================
 
@@ -69,7 +77,7 @@ export const getPosts = async (): Promise<Post[]> => {
 };
 
 // ========================================
-// 게시글 상세
+// 게시글 상세 조회
 // GET /posts/:id
 // ========================================
 
