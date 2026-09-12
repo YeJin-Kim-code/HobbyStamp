@@ -1,6 +1,69 @@
 import { Request, Response } from "express";
 import * as postService from "../services/post.service";
 
+// ========================================
+// 게시글 목록 조회
+// ========================================
+export const getPosts = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const posts = await postService.getPosts();
+
+    return res.status(200).json({
+      message: "게시글 목록 조회 성공",
+      data: posts,
+    });
+  } catch (error) {
+    console.error(error);
+
+    return res.status(500).json({
+      message: "게시글 목록 조회 실패",
+    });
+  }
+};
+
+// ========================================
+// 게시글 상세 조회
+// ========================================
+export const getPost = async (
+  req: Request,
+  res: Response,
+) => {
+  try {
+    const postId = Number(req.params.id);
+
+    if (Number.isNaN(postId)) {
+      return res.status(400).json({
+        message: "잘못된 게시글 ID입니다.",
+      });
+    }
+
+    const post = await postService.getPost(postId);
+
+    return res.status(200).json({
+      message: "게시글 조회 성공",
+      data: post,
+    });
+  } catch (error) {
+    console.error(error);
+
+    if (
+      error instanceof Error &&
+      error.message === "POST_NOT_FOUND"
+    ) {
+      return res.status(404).json({
+        message: "게시글을 찾을 수 없습니다.",
+      });
+    }
+
+    return res.status(500).json({
+      message: "게시글 조회 실패",
+    });
+  }
+};
+
 export const createPost = async (req: Request, res: Response) => {
   try {
     const userId = (req as any).user.userId;

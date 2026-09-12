@@ -1,46 +1,68 @@
+import {
+  useEffect,
+  useState,
+} from "react";
+
 import PostCard from "../components/post/PostCard";
 
-const posts = [
-  {
-    id: 1,
-    title: "오늘 러닝 5km 완료!",
-    content:
-      "처음에는 조금 힘들었지만 끝까지 달리고 나니 정말 뿌듯했다. 다음에는 기록도 조금 더 단축해보고 싶다.",
-    hobby: "러닝",
-    author: "HobbyRunner",
-    createdAt: "2026.09.05",
-    likes: 12,
-    comments: 3,
-  },
-  {
-    id: 2,
-    title: "오랜만에 책 한 권 완독",
-    content:
-      "미뤄두었던 책을 드디어 다 읽었다. 하루에 조금씩 읽는 습관을 들이니까 생각보다 금방 읽을 수 있었다.",
-    hobby: "독서",
-    author: "BookLover",
-    createdAt: "2026.09.04",
-    likes: 8,
-    comments: 2,
-  },
-  {
-    id: 3,
-    title: "새로운 쿠키 레시피 도전",
-    content:
-      "초콜릿 쿠키를 처음 만들어봤다. 모양은 조금 아쉬웠지만 맛은 꽤 괜찮아서 다음에도 다시 만들어볼 생각이다.",
-    hobby: "베이킹",
-    author: "CookieMaker",
-    createdAt: "2026.09.03",
-    likes: 21,
-    comments: 7,
-  },
-];
+import {
+  getPosts,
+  type Post,
+} from "../api/post";
 
 function PostPage() {
+  // ========================================
+  // State
+  // ========================================
+
+  const [posts, setPosts] =
+    useState<Post[]>([]);
+
+  const [loading, setLoading] =
+    useState(true);
+
+  const [error, setError] =
+    useState("");
+
+  // ========================================
+  // 게시글 불러오기
+  // ========================================
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      try {
+        setLoading(true);
+        setError("");
+
+        const data =
+          await getPosts();
+
+        setPosts(data);
+      } catch (error) {
+        console.error(
+          "게시글 조회 실패:",
+          error,
+        );
+
+        setError(
+          "게시글을 불러오지 못했습니다.",
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPosts();
+  }, []);
+
   return (
     <main className="min-h-screen bg-orange-50 px-6 py-10">
       <div className="mx-auto max-w-5xl">
-        {/* 페이지 상단 */}
+
+        {/* ========================================
+            페이지 상단
+        ======================================== */}
+
         <section className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="mb-2 text-sm font-semibold text-orange-500">
@@ -52,10 +74,15 @@ function PostPage() {
             </h1>
 
             <p className="mt-2 text-gray-500">
-              취미 활동을 기록하고 다른 사람들과 경험을 공유해보세요.
+              취미 활동을 기록하고 다른
+              사람들과 경험을 공유해보세요.
             </p>
           </div>
 
+          {/*
+            게시글 작성 화면은 아직 만들지 않았기 때문에
+            버튼만 유지한다.
+          */}
           <button
             type="button"
             className="rounded-xl bg-orange-500 px-5 py-3 font-semibold text-white transition hover:bg-orange-600"
@@ -64,12 +91,65 @@ function PostPage() {
           </button>
         </section>
 
-        {/* 게시글 목록 */}
-        <section className="grid gap-5">
-          {posts.map((post) => (
-            <PostCard key={post.id} post={post} />
-          ))}
-        </section>
+        {/* ========================================
+            Loading
+        ======================================== */}
+
+        {loading && (
+          <div className="py-20 text-center text-gray-500">
+            게시글을 불러오는 중입니다...
+          </div>
+        )}
+
+        {/* ========================================
+            Error
+        ======================================== */}
+
+        {!loading && error && (
+          <div className="py-20 text-center text-red-500">
+            {error}
+          </div>
+        )}
+
+        {/* ========================================
+            게시글 없음
+        ======================================== */}
+
+        {!loading &&
+          !error &&
+          posts.length === 0 && (
+            <div className="rounded-3xl bg-white py-20 text-center shadow-sm">
+              <p className="text-4xl">
+                📝
+              </p>
+
+              <p className="mt-4 font-semibold text-gray-700">
+                아직 게시글이 없습니다.
+              </p>
+
+              <p className="mt-1 text-sm text-gray-400">
+                첫 번째 취미 이야기를
+                남겨보세요!
+              </p>
+            </div>
+          )}
+
+        {/* ========================================
+            게시글 목록
+        ======================================== */}
+
+        {!loading &&
+          !error &&
+          posts.length > 0 && (
+            <section className="grid gap-5">
+              {posts.map((post) => (
+                <PostCard
+                  key={post.id}
+                  post={post}
+                />
+              ))}
+            </section>
+          )}
       </div>
     </main>
   );
