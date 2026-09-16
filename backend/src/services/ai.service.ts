@@ -3,38 +3,51 @@ import Groq from "groq-sdk";
 import { AppDataSource } from "../config/data-source";
 import { Post } from "../entities/post.entity";
 import { HobbyRecord } from "../entities/hobby-record.entity";
+
 const postRepository = AppDataSource.getRepository(Post);
 const hobbyRecordRepository = AppDataSource.getRepository(HobbyRecord);
+
 const groq = new Groq({
-    apiKey: process.env.GROQ_API_KEY,
+  apiKey: process.env.GROQ_API_KEY,
 });
 
-export const summarizePost = async (postId:number) => {
-    const post = await postRepository.findOne({
-        where: {id:postId},
-    });
-    if(!post) {
-        throw new Error("POST_NOT_FOUND");
-    }
-    const completion = await groq.chat.completions.create({
-            model: "openai/gpt-oss-20b",
+// ========================================
+// 게시글 AI 요약
+// ========================================
+
+export const summarizePost = async (postId: number) => {
+  const post = await postRepository.findOne({
+    where: {
+      id: postId,
+    },
+  });
+
+  if (!post) {
+    throw new Error("POST_NOT_FOUND");
+  }
+
+  const completion = await groq.chat.completions.create({
+    model: "openai/gpt-oss-20b",
 
     messages: [
       {
         role: "system",
+
         content:
           "너는 취미 기록 서비스의 게시글을 요약하는 AI야. 게시글의 핵심 내용을 한국어로 간결하게 3줄 이내로 요약해줘.",
       },
+
       {
         role: "user",
+
         content: `제목: ${post.title}\n내용: ${post.content}`,
       },
     ],
 
     temperature: 0.3,
-    });
+  });
 
-      const summary = completion.choices[0]?.message?.content;
+  const summary = completion.choices[0]?.message?.content;
 
   if (!summary) {
     throw new Error("AI_SUMMARY_FAILED");
@@ -45,24 +58,41 @@ export const summarizePost = async (postId:number) => {
   await postRepository.save(post);
 
   return summary;
-}
+};
+
+// ========================================
+// 취미 유형 AI 분석
+// ========================================
 
 export const analyzeHobbyType = async (userId: number) => {
+  // ----------------------------------------
+  // 현재 로그인한 사용자의 취미 기록 조회
+  // ----------------------------------------
+
   const records = await hobbyRecordRepository.find({
     where: {
-      user: { id: userId },
+      user: {
+        id: userId,
+      },
     },
+
     relations: {
       hobby: true,
     },
+
     order: {
       createdAt: "DESC",
     },
   });
 
+  // 기록이 없으면 AI 분석 불가능
   if (records.length === 0) {
     throw new Error("HOBBY_RECORD_NOT_FOUND");
   }
+
+  // ========================================
+  // AI에게 전달할 취미 기록 문자열 생성
+  // ========================================
 
   const recordText = records
     .map((record, index) => {
@@ -76,12 +106,17 @@ export const analyzeHobbyType = async (userId: number) => {
     })
     .join("\n");
 
+  // ========================================
+  // Groq AI 요청
+  // ========================================
+
   const completion = await groq.chat.completions.create({
     model: "openai/gpt-oss-20b",
 
     messages: [
       {
         role: "system",
+
         content: `
 너는 취미 기록 서비스 HobbyStamp의 취미 성향 분석 AI야.
 
@@ -119,8 +154,10 @@ TYPE: 유형명
 DESCRIPTION: 분석 이유를 한국어 2~3문장으로 설명
 `,
       },
+
       {
         role: "user",
+
         content: `
 다음은 사용자의 취미 기록이야.
 
@@ -134,28 +171,92 @@ ${recordText}
     temperature: 0.2,
   });
 
-const result = completion.choices[0]?.message?.content;
+  // ========================================
+  // AI 응답 확인
+  // ========================================
 
-if (!result) {
-  throw new Error("AI_ANALYSIS_FAILED");
-}
+  const result = completion.choices[0]?.message?.content;
 
-const typeMatch = result.match(/TYPE:\s*(.+)/);
-const descriptionMatch = result.match(/DESCRIPTION:\s*([\s\S]+)/);
+  if (!result) {
+    throw new Error("AI_ANALYSIS_FAILED");
+  }
 
-if (!typeMatch || !descriptionMatch) {
-  throw new Error("AI_RESPONSE_FORMAT_INVALID");
-}
+  // ========================================
+  // TYPE / DESCRIPTION 추출
+  // ========================================
 
-const type = typeMatch[1]?.trim();
-const description = descriptionMatch[1]?.trim();
+  const typeMatch = result.match(/TYPE:\s*(.+)/);
 
-if (!type || !description) {
-  throw new Error("AI_RESPONSE_FORMAT_INVALID");
-}
+  const descriptionMatch = result.match(/DESCRIPTION:\s*([\s\S]+)/);
 
-return {
-  type,
-  description,
-};
+  if (!typeMatch || !descriptionMatch) {
+    throw new Error("AI_RESPONSE_FORMAT_INVALID");
+  }
+
+  const type = typeMatch[1]?.trim();
+
+  const description = descriptionMatch[1]?.trim();
+
+  if (!type || !description) {
+    throw new Error("AI_RESPONSE_FORMAT_INVALID");
+  }
+
+  // ========================================
+  // 총 기록 수
+  // ========================================
+
+  const totalRecords = records.length;
+
+  // ========================================
+  // 가장 많이 기록한 취미 계산
+  // ========================================
+
+  const hobbyCount = new Map<string, number>();
+
+  records.forEach((record) => {
+    const hobbyName = record.hobby.name;
+
+    hobbyCount.set(hobbyName, (hobbyCount.get(hobbyName) ?? 0) + 1);
+  });
+
+  let mostActiveHobby = "-";
+  let maxCount = 0;
+
+  hobbyCount.forEach((count, hobbyName) => {
+    if (count > maxCount) {
+      maxCount = count;
+      mostActiveHobby = hobbyName;
+    }
+  });
+
+  // ========================================
+  // 이번 달 기록 수 계산
+  // ========================================
+
+  const now = new Date();
+
+  const thisMonthCount = records.filter((record) => {
+    const createdAt = new Date(record.createdAt);
+
+    return (
+      createdAt.getFullYear() === now.getFullYear() &&
+      createdAt.getMonth() === now.getMonth()
+    );
+  }).length;
+
+  // ========================================
+  // 최종 결과 반환
+  // ========================================
+
+  return {
+    type,
+
+    description,
+
+    stats: {
+      totalRecords,
+      mostActiveHobby,
+      thisMonthCount,
+    },
+  };
 };
