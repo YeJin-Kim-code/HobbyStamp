@@ -172,7 +172,7 @@ function HobbyPage() {
 
         <p className="mt-2 text-gray-500">
           좋아하는 취미를 선택하고
-          HobbyStamp에서 기록해보세요.
+          광기의 취미열차에서 기록해보세요.
         </p>
       </section>
 
