@@ -9,29 +9,16 @@ function HomePage() {
   // ========================================
   // 로그인 여부 확인
   // ========================================
-  //
-  // 로그인 성공 시 LoginPage에서
-  //
-  // localStorage.setItem("token", accessToken);
-  //
-  // 으로 JWT를 저장하고 있기 때문에
-  // token 존재 여부를 기준으로 로그인 상태를 판단한다.
-  //
+
   const token =
     localStorage.getItem("token");
 
   const isLoggedIn = !!token;
 
   // ========================================
-  // 로그인이 필요한 페이지 이동
+  // 로그인 필요 페이지 이동
   // ========================================
-  //
-  // 로그인 상태
-  // → 원래 목적지로 이동
-  //
-  // 비로그인 상태
-  // → 로그인 페이지로 이동
-  //
+
   const handleProtectedNavigation = (
     path: string,
   ) => {
@@ -41,6 +28,17 @@ function HomePage() {
     }
 
     navigate(path);
+  };
+
+  // ========================================
+  // 로그아웃
+  // ========================================
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    window.location.reload();
   };
 
   return (
@@ -53,16 +51,14 @@ function HomePage() {
       <header className="border-b border-orange-100 bg-white">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
 
-          {/* Logo */}
-
           <Link
             to="/"
             className="text-xl font-bold text-orange-500"
           >
-            HobbyStamp
+            광기의 취미열차
           </Link>
 
-          {/* 로그인 상태에 따른 메뉴 */}
+          {/* 로그인 상태별 메뉴 */}
 
           <div className="flex items-center gap-4 text-sm">
 
@@ -93,10 +89,18 @@ function HomePage() {
 
                 <Link
                   to="/mypage"
-                  className="rounded-lg bg-orange-400 px-4 py-2 font-semibold text-white transition hover:bg-orange-500"
+                  className="font-medium text-gray-600 transition hover:text-orange-500"
                 >
                   마이페이지
                 </Link>
+
+                <button
+                  type="button"
+                  onClick={handleLogout}
+                  className="rounded-lg border border-red-200 px-4 py-2 font-semibold text-red-500 transition hover:bg-red-50"
+                >
+                  로그아웃
+                </button>
               </>
             )}
 
@@ -111,9 +115,7 @@ function HomePage() {
 
       <div className="mx-auto max-w-5xl px-6 py-16">
 
-        {/* ========================================
-            Hero
-        ======================================== */}
+        {/* Hero */}
 
         <section className="text-center">
 
@@ -122,7 +124,7 @@ function HomePage() {
           </p>
 
           <h1 className="text-4xl font-bold text-gray-900 sm:text-5xl">
-            HobbyStamp
+            광기의 취미열차
           </h1>
 
           <p className="mx-auto mt-5 max-w-xl text-gray-600">
@@ -141,10 +143,7 @@ function HomePage() {
 
           <div className="grid gap-5 sm:grid-cols-2">
 
-            {/* ========================================
-                취미 기록
-                로그인 필요
-            ======================================== */}
+            {/* 취미 기록 */}
 
             <button
               type="button"
@@ -175,14 +174,11 @@ function HomePage() {
 
             </button>
 
-            {/* ========================================
-                커뮤니티
-                조회는 로그인 없이 가능
-            ======================================== */}
+            {/* 커뮤니티 */}
 
             <Link
               to="/posts"
-              className="group rounded-2xl bg-white p-7 shadow-sm transition hover:-translate-y-1 hover:shadow-md"
+              className="group rounded-2xl bg-white p-7 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-md"
             >
 
               <div className="text-3xl">
@@ -204,10 +200,7 @@ function HomePage() {
 
             </Link>
 
-            {/* ========================================
-                AI 분석
-                로그인 필요
-            ======================================== */}
+            {/* AI 분석 */}
 
             <button
               type="button"
@@ -238,10 +231,7 @@ function HomePage() {
 
             </button>
 
-            {/* ========================================
-                마이페이지
-                로그인 필요
-            ======================================== */}
+            {/* 마이페이지 */}
 
             <button
               type="button"
@@ -276,9 +266,7 @@ function HomePage() {
 
         </section>
 
-        {/* ========================================
-            Hobby Navigation
-        ======================================== */}
+        {/* 취미 둘러보기 */}
 
         <section className="mt-10 text-center">
 

@@ -3,9 +3,12 @@ import {
   Route,
 } from "react-router-dom";
 
+import Layout from "./components/layout/Layout";
+
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import SignupPage from "./pages/SignupPage";
+
 import DashboardPage from "./pages/DashboardPage";
 import HobbyPage from "./pages/HobbyPage";
 import RecordPage from "./pages/RecordPage";
@@ -23,100 +26,100 @@ function App() {
   return (
     <Routes>
 
+      {/* ========================================
+          Home
+      ======================================== */}
+
       <Route
         path="/"
-        element={
-          <HomePage />
-        }
+        element={<HomePage />}
       />
+
+      {/* ========================================
+          Auth
+      ======================================== */}
 
       <Route
         path="/login"
-        element={
-          <LoginPage />
-        }
+        element={<LoginPage />}
       />
 
       <Route
         path="/signup"
-        element={
-          <SignupPage />
-        }
-      />
-
-      <Route
-        path="/dashboard"
-        element={
-          <DashboardPage />
-        }
-      />
-
-      <Route
-        path="/hobbies"
-        element={
-          <HobbyPage />
-        }
-      />
-
-      <Route
-        path="/records"
-        element={
-          <RecordPage />
-        }
-      />
-
-      <Route
-        path="/stamps"
-        element={
-          <StampPage />
-        }
+        element={<SignupPage />}
       />
 
       {/* ========================================
-          Community
+          Layout 적용 페이지
+
+          아래 페이지들은 모두
+
+          Navbar
+          ↓
+          Page
+
+          구조로 표시된다.
       ======================================== */}
 
-      <Route
-        path="/posts"
-        element={
-          <PostPage />
-        }
-      />
+      <Route element={<Layout />}>
 
-      <Route
-        path="/posts/write"
-        element={
-          <PostWritePage />
-        }
-      />
+        <Route
+          path="/dashboard"
+          element={<DashboardPage />}
+        />
 
-      <Route
-        path="/posts/:postId/edit"
-        element={
-          <PostEditPage />
-        }
-      />
+        <Route
+          path="/hobbies"
+          element={<HobbyPage />}
+        />
 
-      <Route
-        path="/posts/:postId/comments"
-        element={
-          <CommentPage />
-        }
-      />
+        <Route
+          path="/records"
+          element={<RecordPage />}
+        />
 
-      <Route
-        path="/ai"
-        element={
-          <AiPage />
-        }
-      />
+        <Route
+          path="/stamps"
+          element={<StampPage />}
+        />
 
-      <Route
-        path="/mypage"
-        element={
-          <MyPage />
-        }
-      />
+        {/* Community */}
+
+        <Route
+          path="/posts"
+          element={<PostPage />}
+        />
+
+        <Route
+          path="/posts/write"
+          element={<PostWritePage />}
+        />
+
+        <Route
+          path="/posts/:postId/edit"
+          element={<PostEditPage />}
+        />
+
+        <Route
+          path="/posts/:postId/comments"
+          element={<CommentPage />}
+        />
+
+        {/* AI */}
+
+        <Route
+          path="/ai"
+          element={<AiPage />}
+        />
+
+        {/* MyPage */}
+
+        <Route
+          path="/mypage"
+          element={<MyPage />}
+        />
+
+      </Route>
 
     </Routes>
   );
